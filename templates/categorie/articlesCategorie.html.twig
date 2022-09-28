@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CategorieController!{% endblock %}
+
+{% block body %}
+    <h1>Listes des articles par catégorie  </h1>
+    <ul>
+        {% for categorie in categories %}
+            <h2>{{ categorie.titre }}</h2>
+            <p>{{ categorie.creatAt | date('m/d/Y') }}</p>
+            <p>{{ categorie.contenu }}</p>
+
+        {% endfor %}
+    </ul>
+{% endblock %}

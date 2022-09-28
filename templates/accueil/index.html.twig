@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AccueilController!{% endblock %}
+
+{% block body %}
+    <div class="text-center mt-5">
+        <h1 >Bienvenue sur mon blog</h1>
+
+        <br>
+        <h2>Liste des 10 derniers articles </h2>
+        <br>
+        <ul>
+            {% for article in articles %}
+
+                <li><a href="{{ path('app_contenue_slug', {slug : article.slug}) }}"> {{ article.titre }} {{ article.creatAt | date('m/d/Y') }} </a> </li>
+
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}

@@ -17,18 +17,20 @@ class ArticleController extends AbstractController
         $this->articleRepository = $articleRepository;
     }
 
+
+
     #[Route('/articles', name: 'app_articles')]
     // a l'appel de la méthode symfony va créer un objet
     // de la classe ArticleRepository et passer en paramétre de la méthode
     //Mécanisme : INJECTION DE DEPANDENCES
 
-    public function getArticles(ArticleRepository $repository): Response
+    public function getArticles(): Response
     {
         //récupécurer les informations dans la DB
         // Le côntrolleur fait appel au modèle (classe du modèle)
         //afin de récupérer la liste des articles
         // $repository = new ArticleRepository();
-        $articles = $repository->findBy([],['creatAt' => 'DESC'],5);
+        $articles = $this->articleRepository->findBy([],['creatAt' => 'DESC']);
 
         return $this->render('article/index.html.twig',[
             "articles" => $articles
@@ -36,18 +38,18 @@ class ArticleController extends AbstractController
             ;
     }
 
-    #[Route('/contenue/{id}', name: 'app_contenue_id')]
+    #[Route('/contenue/{slug}', name: 'app_contenue_slug')]
     // a l'appel de la méthode symfony va créer un objet
         // de la classe ArticleRepository et passer en paramétre de la méthode
         //Mécanisme : INJECTION DE DEPANDENCES
 
-    public function getContenue(ArticleRepository $repository,$id): Response
+    public function getContenue($slug): Response
     {
         //récupécurer les informations dans la DB
         // Le côntrolleur fait appel au modèle (classe du modèle)
         //afin de récupérer la liste des articles
         // $repository = new ArticleRepository();
-        $article = $repository->find($id);
+        $article = $this->articleRepository->findOneBy(["slug"=>$slug]);
 
         return $this->render('article/contenue.html.twig',[
             "article" => $article
