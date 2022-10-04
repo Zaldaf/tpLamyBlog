@@ -7,9 +7,30 @@
 
     <h2>{{ article.titre }}</h2>
     <a class="button" href="{{ path('app_categorie_slug', {slug : article.categorie.slug}) }}">{{ article.categorie.titre }}</a>
-    <p>{{ article.contenu }} </p>
-    <br>
-    <br>
+    <p class="mb-5">{{ article.contenu }} </p>
+    <div class="mb-5">
+        {% if article.commentaires.count > 1  %}
+            <h2 > Il y a {{ article.commentaires.count }} Commentaires : </h2>
+        {%else%}
+            <h3>Il y a {{ article.commentaires.count }} Commentaire : </h3>
+        {%endif%}
+    </div>
+
+    {% for commentaire in commentaires %}
+        <div class="card mb-5">
+            <div class="card-header">
+                {% if commentaire.idUtilisateur %}
+                <h3>{{ commentaire.idUtilisateur.pseudo }}</h3>
+                {%else%}
+                    <h3>Anonyme</h3>
+                {%endif%}
+            </div>
+            <div class="card-body ">
+                <h3 class="mb-4">{{ commentaire.createAt | date('m/d/Y') }}</h3>
+                <p class="card-text text-center">{{ commentaire.contenu }}</p>
+            </div>
+        </div>
+    {% endfor %}
 
 
 
