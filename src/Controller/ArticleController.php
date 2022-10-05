@@ -19,7 +19,7 @@ class ArticleController extends AbstractController
 {
     private ArticleRepository $articleRepository;
     private CommentaireRepository $commentaireRepository;
-    private UtilisateurRepository $utilisateurRepository;
+
 
     //Demander a symfony d'injecter une instance de ArticleRepository
     //à la création du contrôleur (instance de ArticleController)
@@ -75,11 +75,22 @@ class ArticleController extends AbstractController
         ])
             ;
     }
-    #[Route('/articles/nouveau', name: 'app_article_nouveau',priority: 1)]
-    public function insert(SluggerInterface $slugger) :Response{
+    #[Route('/articles/nouveau', name: 'app_article_nouveau',methods:['GET','POST'],priority: 1)]
+    public function insert(SluggerInterface $slugger,Request $request) :Response{
         $article= new Article();
         //création du formulaire
         $formArticle = $this->createForm(ArticleType::class,$article);
+
+        //Reconnaitre si le formulaire a été soumis ou pas
+        $formArticle->handleRequest($request);
+        //Est-ce que le formulaire a été soumis
+        if ($formArticle->isSubmitted() && $formArticle->isValid()){
+            $article->setSlug($slugger->slug($article->getTitre())->lower())
+                    ->setCreatAt(new \DateTime());
+            //insert l'article dans la base de données
+            $this->articleRepository->add($article,true);
+            return $this->redirectToRoute("app_articles");
+        }
         //appel de la vue twig permettant d'afficher le formulaire
         return $this->renderForm('article/nouveau.html.twig',[
             'formArticle' => $formArticle

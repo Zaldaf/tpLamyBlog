@@ -3,10 +3,14 @@
 {% block title %}contenue Article{% endblock %}
 
 {% block body %}
-    <h1>Détail article</h1>
+    <h1 class="mb-5">Détail article</h1>
 
-    <h2>{{ article.titre }}</h2>
+    <h2 class="text-center mb-4">{{ article.titre }}</h2>
+    {% if article.categorie  %}
     <a class="button" href="{{ path('app_categorie_slug', {slug : article.categorie.slug}) }}">{{ article.categorie.titre }}</a>
+    {% else %}
+    <p>Pas de catégorie</p>
+    {% endif %}
     <p class="mb-5">{{ article.contenu }} </p>
     <div class="mb-5">
         {% if article.commentaires.count > 1  %}

@@ -5,8 +5,21 @@
 {% block body %}
     <h1 class="mb-3">Creation Nouvel Article</h1>
     {{ form_start(formArticle) }}
-    {{ form_row(formArticle.titre) }}
-    {{ form_row(formArticle.contenu) }}
+    {{ form_row(formArticle.titre,{ '
+        label' : 'Titre article',
+        'attr' : {
+            'placeholder' : "veuillez saisir le titre de l'article"
+        },
+        'help' : 'le titre doit contenir au moins 5 caractère'
+    }) }}
+    {{ form_row(formArticle.contenu,{'label' : 'Contenu article'}) }}
+    {{ form_row(formArticle.categorie) }}
+    {# {{ form_label(formArticle.titre,"Titre Article",{'label_attr' : { 'class' : 'text-warning'}}) }}
+    {{ form_widget(formArticle.titre,{'attr' : {"placeholder" : "veuillez saisir le titre de l'article"}}) }}
+    {{ form_help(formArticle.titre,{"help" : "Saisir au moins 5 caractères"}) }}
+
+    {{ form_label(formArticle.contenu,"Contenu Article") }}
+    {{ form_widget(formArticle.contenu,{'attr' : {"placeholder" : "veuillez saisir le contenu de l'article"}}) }} #}
     <input type="submit" class="btn btn-primary" value="ajouter">
     {{ form_end(formArticle) }}
 
