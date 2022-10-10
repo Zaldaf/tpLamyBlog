@@ -3,13 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Commentaire;
 use App\Form\ArticleType;
+use App\Form\CommentaireType;
 use App\Repository\ArticleRepository;
 use App\Repository\CommentaireRepository;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,6 +22,7 @@ class ArticleController extends AbstractController
 {
     private ArticleRepository $articleRepository;
     private CommentaireRepository $commentaireRepository;
+    private UtilisateurRepository $utilisateurRepository;
 
 
     //Demander a symfony d'injecter une instance de ArticleRepository
@@ -27,6 +31,7 @@ class ArticleController extends AbstractController
         $this->articleRepository = $articleRepository;
         $this->commentaireRepository = $commentaireRepository;
         $this->utilisateurRepository = $utilisateurRepository;
+
     }
 
 
@@ -44,7 +49,7 @@ class ArticleController extends AbstractController
         // $repository = new ArticleRepository();
         //mise en place paginator
         $articles = $paginator->paginate(
-            $this->articleRepository->findBy([],['creatAt' => 'DESC']),
+            $this->articleRepository->findBy(['isPublie' => true],['creatAt' => 'DESC']),
             $request->query->getInt('page', 1), /*page number*/
             10 /*limit per page*/
         );
@@ -55,12 +60,12 @@ class ArticleController extends AbstractController
             ;
     }
 
-    #[Route('/articles/{slug}', name: 'app_article_slug')]
+    #[Route('/articles/{slug}', name: 'app_article_slug',methods:['GET','POST'])]
     // a l'appel de la méthode symfony va créer un objet
         // de la classe ArticleRepository et passer en paramétre de la méthode
         //Mécanisme : INJECTION DE DEPANDENCES
 
-    public function getContenue($slug): Response
+    public function getContenue($slug,SluggerInterface $slugger,Request $request): Response
     {
         //récupécurer les informations dans la DB
         // Le côntrolleur fait appel au modèle (classe du modèle)
@@ -69,12 +74,39 @@ class ArticleController extends AbstractController
         $article = $this->articleRepository->findOneBy(["slug"=>$slug]);
         $commentaires = $this->commentaireRepository->findBy(["id_article"=>$this->articleRepository->findBy(["slug"=>$slug])]);
 
-        return $this->render('article/contenue.html.twig',[
+        $commentaire = new Commentaire();
+        $formCommentaire = $this->createForm(CommentaireType::class,$commentaire);
+        $formCommentaire->handleRequest($request);
+        if ($formCommentaire->isSubmitted() && $formCommentaire->isValid()){
+            $commentaire->setIdArticle($this->articleRepository->findOneBy(["slug"=>$slug]))
+                        ->setCreateAt(new \DateTime())
+                        ->setIdUtilisateur($this->utilisateurRepository->findOneBy(['pseudo'=>$formCommentaire->getData()]));
+            if ($formCommentaire->get('pseudo')->addError(new FormError('pseudo non valide'))){
+
+
+            }else{
+                $this->commentaireRepository->add($commentaire,true);
+            }
+
+
+
+            //return $this->redirectToRoute("app_article_slug",["slug"=>$slug]);
+        }
+
+
+        return $this->renderForm('article/contenue.html.twig',[
             "article" => $article,
-            "commentaires" => $commentaires
+            "commentaires" => $commentaires,
+            "formCommentaire" => $formCommentaire
         ])
             ;
     }
+
+
+
+
+
+
     #[Route('/articles/nouveau', name: 'app_article_nouveau',methods:['GET','POST'],priority: 1)]
     public function insert(SluggerInterface $slugger,Request $request) :Response{
         $article= new Article();

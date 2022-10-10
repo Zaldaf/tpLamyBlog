@@ -6,6 +6,7 @@ class Articles{
     -contenu:text
     -createAt:datetime
     -slug:string
+    -isPublie:bool
 }
 
 class Categorie{

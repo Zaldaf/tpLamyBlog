@@ -11,7 +11,17 @@
     {% else %}
     <p>Pas de catégorie</p>
     {% endif %}
-    <p class="mb-5">{{ article.contenu }} </p>
+    <p class="mb-5">{{ article.contenu | raw }} </p>
+
+    <div>
+        <h1 class="mb-3">Creation d'un Commentaire</h1>
+        {{ form_start(formCommentaire) }}
+        {{ form_row(formCommentaire.contenu,{'label' : 'Contenu commentaire'}) }}
+        {{ form_row(formCommentaire.pseudo,{'label' : 'Pseudo'}) }}
+        <input type="submit" class="btn btn-primary" value="ajouter">
+        {{ form_end(formCommentaire) }}
+    </div>
+
     <div class="mb-5">
         {% if article.commentaires.count > 1  %}
             <h2 > Il y a {{ article.commentaires.count }} Commentaires : </h2>

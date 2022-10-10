@@ -39,6 +39,9 @@ class Article
     #[ORM\OneToMany(mappedBy: 'id_article', targetEntity: Commentaire::class)]
     private Collection $commentaires;
 
+    #[ORM\Column]
+    private ?bool $isPublie = null;
+
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
@@ -135,6 +138,18 @@ class Article
                 $commentaire->setIdArticle(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isIsPublie(): ?bool
+    {
+        return $this->isPublie;
+    }
+
+    public function setIsPublie(bool $isPublie): self
+    {
+        $this->isPublie = $isPublie;
 
         return $this;
     }

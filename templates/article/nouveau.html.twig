@@ -14,6 +14,7 @@
     }) }}
     {{ form_row(formArticle.contenu,{'label' : 'Contenu article'}) }}
     {{ form_row(formArticle.categorie) }}
+    {{ form_row(formArticle.isPublie,{'label' : 'Publier Article'}) }}
     {# {{ form_label(formArticle.titre,"Titre Article",{'label_attr' : { 'class' : 'text-warning'}}) }}
     {{ form_widget(formArticle.titre,{'attr' : {"placeholder" : "veuillez saisir le titre de l'article"}}) }}
     {{ form_help(formArticle.titre,{"help" : "Saisir au moins 5 caractères"}) }}

@@ -35,6 +35,7 @@ class ArticleFixtures extends Fixture implements DependentFixtureInterface
             //Associer l'article a une catégorie, récuperer une référence d'une catégorie
             $numCategorie = $faker->numberBetween(0,8);
             $article->setCategorie($this->getReference("categorie".$numCategorie));
+            $article->setIsPublie($faker->numberBetween(0,4)>1);
             //Générer l'ordre INSERT
             //INSERT INTO article values ("titre 1","contenue de l'article)
 
