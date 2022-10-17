@@ -11,8 +11,8 @@
     {% else %}
     <p>Pas de catégorie</p>
     {% endif %}
-    <p class="mb-5">{{ article.contenu | raw }} </p>
-
+    <p class="mb-3">{{ article.contenu | raw }} </p>
+    <a href="{{ path('app_article_update',{slug : article.slug}) }}" class="btn btn-secondary mb-5">modification article</a>
     <div>
         <h1 class="mb-3">Creation d'un Commentaire</h1>
         {{ form_start(formCommentaire) }}

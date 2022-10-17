@@ -78,17 +78,10 @@ class ArticleController extends AbstractController
         $formCommentaire = $this->createForm(CommentaireType::class,$commentaire);
         $formCommentaire->handleRequest($request);
         if ($formCommentaire->isSubmitted() && $formCommentaire->isValid()){
+            $utilisateur = $this->utilisateurRepository->findOneBy(['pseudo'=> $formCommentaire->get('pseudo')->getData()]);
             $commentaire->setIdArticle($this->articleRepository->findOneBy(["slug"=>$slug]))
                         ->setCreateAt(new \DateTime())
-                        ->setIdUtilisateur($this->utilisateurRepository->findOneBy(['pseudo'=>$formCommentaire->getData()]));
-            if ($formCommentaire->get('pseudo')->addError(new FormError('pseudo non valide'))){
-
-
-            }else{
-                $this->commentaireRepository->add($commentaire,true);
-            }
-
-
+                        ->setIdUtilisateur($utilisateur);
 
             //return $this->redirectToRoute("app_article_slug",["slug"=>$slug]);
         }
@@ -136,5 +129,29 @@ class ArticleController extends AbstractController
         return $this->redirectToRoute("app_articles");*/
 
     }
+
+    #[Route('/articles/update/{slug}', name: 'app_article_update',methods:['GET','POST'],priority: 1)]
+    public function update(SluggerInterface $slugger,Request $request, $slug) :Response{
+        $article= $this->articleRepository->findOneBy(['slug'=>$slug]) ;
+        //création du formulaire
+        $formArticle = $this->createForm(ArticleType::class,$article);
+
+        //Reconnaitre si le formulaire a été soumis ou pas
+        $formArticle->handleRequest($request);
+        //Est-ce que le formulaire a été soumis
+        if ($formArticle->isSubmitted() && $formArticle->isValid()){
+            $article->setSlug($slugger->slug($article->getTitre())->lower());
+            //insert l'article dans la base de données
+            $this->articleRepository->add($article,true);
+            return $this->redirectToRoute("app_articles");
+        }
+        //appel de la vue twig permettant d'afficher le formulaire
+        return $this->renderForm('article/update.html.twig',[
+            'formArticle' => $formArticle,
+            'article' => $article
+        ]);
+    }
+
+
 
 }

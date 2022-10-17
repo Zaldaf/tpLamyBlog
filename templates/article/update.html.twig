@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <h1 class="mb-3">Modification Article</h1>
+    {{ form_start(formArticle) }}
+    {{ form_row(formArticle.titre,{ '
+        label' : 'Titre article',
+        'attr' : {
+            'placeholder' : "veuillez saisir le titre de l'article"
+        },
+        'help' : 'le titre doit contenir au moins 5 caractère'
+    }) }}
+    {{ form_row(formArticle.contenu) }}
+    {{ form_row(formArticle.categorie) }}
+    {{ form_row(formArticle.isPublie) }}
+    <input type="submit" class="btn btn-primary" value="modifier">
+    {{ form_end(formArticle) }}
+
+{% endblock %}
