@@ -82,8 +82,8 @@ class ArticleController extends AbstractController
             $commentaire->setIdArticle($this->articleRepository->findOneBy(["slug"=>$slug]))
                         ->setCreateAt(new \DateTime())
                         ->setIdUtilisateur($utilisateur);
-
-            //return $this->redirectToRoute("app_article_slug",["slug"=>$slug]);
+            $this->commentaireRepository->add($commentaire,true);
+            return $this->redirectToRoute("app_article_slug",["slug"=>$slug]);
         }
 
 

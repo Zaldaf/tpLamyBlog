@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ContactController!{% endblock %}
+
+{% block body %}
+    <h1 class="mb-3">Envoie d'un email</h1>
+    {{ form_start(formContact) }}
+    {{ form_row(formContact.nom,{ '
+        label' : 'nom',
+        'attr' : {
+            'placeholder' : "veuillez saisir votre nom"
+        },
+    }) }}
+    {{ form_row(formContact.prenom,{ '
+        label' : 'prenom',
+        'attr' : {
+            'placeholder' : "veuillez saisir votre prenom"
+        },
+    }) }}
+    {{ form_row(formContact.email) }}
+    {{ form_row(formContact.objet,{'label' : 'objet'}) }}
+    {{ form_row(formContact.contenu,{'label' : 'Contenu'}) }}
+
+
+    <input type="submit" class="btn btn-primary" value="envoyer">
+    {{ form_end(formContact) }}
+{% endblock %}

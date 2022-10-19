@@ -26,6 +26,15 @@ class Commentaire{
     -contenu:string
     -createAt:datetime
 }
+class contact{
+    -id : int
+    -nom : string
+    -prenom : string
+    -email : string
+    -objet : string
+    -contenu : string
+    -createAt : datetime
+}
 Articles "0..*"--"0..1"Categorie
 Commentaire "0..*"--"1..1" Articles
 Commentaire "0..*"--"0..1" Utilisateur
